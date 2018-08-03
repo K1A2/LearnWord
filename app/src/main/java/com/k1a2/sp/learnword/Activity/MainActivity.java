@@ -6,7 +6,9 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.k1a2.sp.learnword.R;
 import com.k1a2.sp.learnword.View.RecyclerView.WordListAdapter;
 import com.k1a2.sp.learnword.View.RecyclerView.WordListItem;
@@ -17,6 +19,7 @@ public class MainActivity extends Activity {
 
     private RecyclerView recycler_word;
     private WordListAdapter wordListAdapter;
+    private FloatingActionButton fab_addWord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +27,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         recycler_word = (RecyclerView)findViewById(R.id.recycle_list_word);
+        fab_addWord = (FloatingActionButton)findViewById(R.id.fab_main_plus);
 
         wordListAdapter = new WordListAdapter(R.layout.recycler_list_word);
 
@@ -31,6 +35,14 @@ public class MainActivity extends Activity {
         recycler_word.setItemAnimator(new DefaultItemAnimator());
 
         showWordLIst();
+
+        //단어장 추가
+        fab_addWord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     private void showWordLIst() {
