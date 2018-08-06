@@ -36,7 +36,7 @@ public class DatabaseHalper extends SQLiteOpenHelper {
         try {
             SQLiteDatabase sqLiteDatabase = getReadableDatabase();
             int count = 0;
-            String SQL_GET_ALL_TABLES = "SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name != 'android_metadata' AND name != 'sqlite_sequence'";
+            String SQL_GET_ALL_TABLES = "SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name != 'android_metadata' AND name != 'sqlite_sequence' AND name != 'Type'";
             Cursor cursor = sqLiteDatabase.rawQuery(SQL_GET_ALL_TABLES, null);
             cursor.moveToFirst();
             while (cursor.moveToNext()) {
@@ -53,12 +53,18 @@ public class DatabaseHalper extends SQLiteOpenHelper {
         try {
             ArrayList<WordListItem> array_name = new ArrayList<WordListItem>();
             SQLiteDatabase sqLiteDatabase = getReadableDatabase();
-            String SQL_GET_ALL_TABLES = "SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name != 'android_metadata' AND name != 'sqlite_sequence' AND name != 'Type'";
+            String SQL_GET_ALL_TABLES = "SELECT name FROM sqlite_master WHERE type='table' AND name != 'android_metadata' AND name != 'sqlite_sequence' AND name != 'Type'";
             Cursor cursor = sqLiteDatabase.rawQuery(SQL_GET_ALL_TABLES, null);
             cursor.moveToFirst();
-            while (cursor.moveToNext()) {
-                array_name.add(new WordListItem(cursor.getColumnName(cursor.getPosition()), 0));
+            int count = 0;
+            while (cursor.getCount() > 0&&!(cursor.getCount() == count)) {
+                Cursor row_cursor = sqLiteDatabase.rawQuery("SELECT count(*) FROM `" + cursor.getString(0) + "`", null);
+                int row_count = row_cursor.getCount() - 1;
+                array_name.add(new WordListItem(cursor.getString(0), row_count));
+                cursor.moveToNext();
+                count++;
             }
+            cursor.close();
             sqLiteDatabase.close();
             return array_name;
         } catch (Exception e) {
