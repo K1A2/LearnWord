@@ -17,6 +17,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.k1a2.sp.learnword.DB.DatabaseHalper;
 import com.k1a2.sp.learnword.DB.DatabaseKey;
 import com.k1a2.sp.learnword.R;
+import com.k1a2.sp.learnword.View.RecyclerView.RecyclerItemClickListener;
 import com.k1a2.sp.learnword.View.RecyclerView.WordListAdapter;
 import com.k1a2.sp.learnword.View.RecyclerView.WordListItem;
 
@@ -57,13 +58,23 @@ public class MainActivity extends Activity {
                 Date date = new Date(now);
                 String dform = new SimpleDateFormat("yyyyMMddhhmmss").format(date);
                 dform += count;
-                Intent intent = new Intent(MainActivity.this, WordFileActivity.class);
-                intent.putExtra(ActivityKey.KEY_INTENT_MW_NEW, ActivityKey.KEY_INTENT_MW_NEW_T);
-                intent.putExtra(ActivityKey.KEY_INTENT_MW_NAME, dform);
-                startActivity(intent);
-                finish();
+                stratActivity(dform, ActivityKey.KEY_INTENT_MW_NEW_T);
             }
         });
+
+        //리스트 리스너
+        recycler_word.addOnItemTouchListener(new RecyclerItemClickListener(this, recycler_word, new RecyclerItemClickListener.OnItemClickListener() {
+            @Override
+            public void onItemClicked(View view, int position) {
+                WordListItem wordListItem = (WordListItem)wordListAdapter.getItem(position);
+                stratActivity(wordListItem.getTitle(), ActivityKey.KEY_INTENT_MW_NEW_F);
+            }
+
+            @Override
+            public void onLongItemClicked(View view, int position) {
+
+            }
+        }));
     }
 
     private void showWordLIst() {
@@ -75,5 +86,13 @@ public class MainActivity extends Activity {
             }
         }
         recycler_word.setAdapter(wordListAdapter);
+    }
+
+    private void stratActivity(String name, boolean isNem) {
+        Intent intent = new Intent(MainActivity.this, WordFileActivity.class);
+        intent.putExtra(ActivityKey.KEY_INTENT_MW_NEW, isNem);
+        intent.putExtra(ActivityKey.KEY_INTENT_MW_NAME, name);
+        startActivity(intent);
+        finish();
     }
 }
